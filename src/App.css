@@ -1,38 +1,64 @@
-.App {
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0D1B2A;
+  /* Azul Escuro Industrial */
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #E0E1DD;
+}
+
+.contador-card {
+  background-color: #1B263B;
+  border: 2px solid #778DA9;
+  border-radius: 12px;
+  padding: 35px;
+  width: 320px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.contador-titulo {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #778DA9;
+  margin: 0 0 8px 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.contador-display {
+  background-color: rgba(13, 27, 42, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.contador-numero {
+  display: block;
+  font-size: 64px;
+  font-weight: 700;
 }
 
-.App-link {
-  color: #61dafb;
+.contador-botao {
+  background-color: #778DA9;
+  color: #0D1B2A;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.alerta-limite-ativo {
+  background-color: #2EC4B6;
+  /* Verde Alerta de Sistema Ativo */
+  color: #0D1B2A;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 20px;
+  font-weight: bold;
 }
