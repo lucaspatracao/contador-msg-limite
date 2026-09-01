@@ -1,70 +1,247 @@
-# Getting Started with Create React App
+# Guia do Projeto: Contador com Mensagem de Limite (`contador-msg-limite`)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este guia apresenta a implementação completa, passo a passo, do componente React **`ContadorCurtidas`**. O projeto utiliza Hooks modernos do React (`useState` e `useEffect`) para monitorar o estado e disparar ações secundárias (efeitos colaterais) quando limites específicos são atingidos, além de seguir as melhores práticas industriais de estilo e controle de versão.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🎯 Conceitos Chave Aplicados
 
-### `npm start`
+1. **Estado (`useState`)**: Responsável por reter e atualizar o número de curtidas em tempo real.
+2. **Efeito Colateral (`useEffect`)**: Disparado sempre que o estado do contador muda. Ele observa a variável do estado usando o array de dependências `[curtidas]` e executa uma ação de verificação (exibindo um alerta, atualizando o console e ativando a mensagem em tela).
+3. **Array de Dependências**: É crucial declarar `[curtidas]` para garantir que o efeito seja reavaliado de forma eficiente **apenas** quando o valor de curtidas mudar, evitando renderizações infinitas ou processamento desnecessário.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 💻 Código-Fonte do Projeto
 
-### `npm test`
+### 1. Componente React (`src/components/ContadorCurtidas.jsx`)
+Crie a pasta `src/components/` se ela ainda não existir e crie o arquivo `ContadorCurtidas.jsx` com o seguinte código funcional e limpo:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```jsx
+import React, { useState, useEffect } from 'react';
 
-### `npm run build`
+function ContadorCurtidas() {
+  // Inicializa o estado das curtidas em zero
+  const [curtidas, setCurtidas] = useState(0);
+  // Estado para controlar a exibição da mensagem de alta na tela
+  const [mensagemVisible, setMensagemVisible] = useState(false);
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  useEffect(() => {
+    // Esse efeito roda sempre que a variável 'curtidas' for atualizada
+    if (curtidas >= 5) {
+      // Exibe no console conforme instrução do exercício
+      console.log("Curtidas em alta! Limite de 5 atingido.");
+      
+      // Ativa o estado que mostra a mensagem de destaque na tela
+      setMensagemVisible(true);
+    } else {
+      setMensagemVisible(false);
+    }
+  }, [curtidas]); // Dependência correta para observar as alterações do contador
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  const incrementar = () => {
+    setCurtidas(prev => prev + 1);
+  };
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  return (
+    <div className="contador-card">
+      <h2 className="contador-titulo">PRODUÇÃO INDUSTRIAL</h2>
+      <p className="contador-subtitulo">Painel de Feedback e Engajamento da Planta</p>
+      
+      <div className="contador-display">
+        <span className="contador-numero">{curtidas}</span>
+        <span className="contador-label">{curtidas === 1 ? 'Curtida' : 'Curtidas'}</span>
+      </div>
 
-### `npm run eject`
+      <button className="contador-botao" onClick={incrementar}>
+        👍 Curtir Postagem
+      </button>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+      {mensagemVisible && (
+        <div className="alerta-limite-ativo animate-fade-in">
+          🔥 Curtidas em alta!
+        </div>
+      )}
+    </div>
+  );
+}
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+export default ContadorCurtidas;
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 2. Estilos Customizados (`src/App.css`)
+Adicione estes estilos ao seu arquivo `src/App.css` para manter a identidade visual de alta qualidade do dashboard industrial (paleta de cores elegante: Azul-escuro, Azul-claro, Cinza Metálico e Verde de Alerta):
 
-## Learn More
+```css
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0D1B2A; /* Azul Escuro Industrial */
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #E0E1DD;
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+.app-container {
+  text-align: center;
+}
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+.contador-card {
+  background-color: #1B263B; /* Azul Claro */
+  border: 2px solid #778DA9; /* Cinza Metálico */
+  border-radius: 12px;
+  padding: 35px;
+  width: 320px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
 
-### Code Splitting
+.contador-card:hover {
+  transform: translateY(-4px);
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+.contador-titulo {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #778DA9;
+  margin: 0 0 8px 0;
+}
 
-### Analyzing the Bundle Size
+.contador-subtitulo {
+  font-size: 11px;
+  color: #E0E1DD;
+  opacity: 0.7;
+  margin-bottom: 25px;
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+.contador-display {
+  background-color: rgba(13, 27, 42, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(119, 141, 169, 0.3);
+  margin-bottom: 25px;
+}
 
-### Making a Progressive Web App
+.contador-numero {
+  display: block;
+  font-size: 64px;
+  font-weight: 700;
+  color: #E0E1DD;
+  line-height: 1;
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+.contador-label {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: #778DA9;
+  text-transform: uppercase;
+  margin-top: 5px;
+  display: block;
+}
 
-### Advanced Configuration
+.contador-botao {
+  background-color: #778DA9;
+  color: #0D1B2A;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+.contador-botao:hover {
+  background-color: #E0E1DD;
+  transform: scale(1.02);
+}
 
-### Deployment
+.contador-botao:active {
+  transform: scale(0.98);
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+.alerta-limite-ativo {
+  background-color: #2EC4B6; /* Verde Dinâmico de Sistema */
+  color: #0D1B2A;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+}
 
-### `npm run build` fails to minify
+/* Animação suave para entrada do alerta */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+```
+
+---
+
+### 3. Integração (`src/App.js`)
+Substitua o conteúdo de `src/App.js` para renderizar o componente que criamos:
+
+```jsx
+import React from 'react';
+import ContadorCurtidas from './components/ContadorCurtidas';
+import './App.css';
+
+function App() {
+  return (
+    <div className="app-container">
+      <ContadorCurtidas />
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+## 🛠️ Passos do Git (Criação e Envio ao GitHub)
+
+Siga os comandos de terminal abaixo sequencialmente na pasta raiz do seu projeto local para inicializar o repositório `contador-msg-limite` e publicá-lo:
+
+1. **Abra o terminal na pasta raiz do seu projeto React.**
+2. **Inicialize o versionamento local do Git:**
+   ```bash
+   git init
+   ```
+3. **Adicione os arquivos de código criados ao index de preparação:**
+   ```bash
+   git add .
+   ```
+4. **Crie o primeiro commit estruturado explicando o recurso:**
+   ```bash
+   git commit -m "feat: criar ContadorCurtidas com monitoramento de limites por useEffect"
+   ```
+5. **Ajuste o nome da branch principal para `main`:**
+   ```bash
+   git branch -M main
+   ```
+6. **Conecte seu repositório local ao novo repositório criado no GitHub** *(Substitua `SEU_USUARIO` pelo seu login real do GitHub)*:
+   ```bash
+   git remote add origin https://github.com/SEU_USUARIO/contador-msg-limite.git
+   ```
+7. **Envie as alterações locais de forma definitiva para o GitHub:**
+   ```bash
+   git push -u origin main
+   ```
+
+Seu repositório público estará publicado com sucesso em:  
+`https://github.com/SEU_USUARIO/contador-msg-limite`
